@@ -1,3 +1,31 @@
 .main {
   padding: 6vh 10vw;
 }
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+.navButtonContainer {
+  display: flex;
+  gap: 10px;
+}
+
+.buttonPrimary {
+  padding: 10px 20px;
+  font-weight: bold;
+  font-size: 20px;
+  font-family: inherit;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  background-color: var(--button-primary);
+}
+
+.boardContainer {
+  display: flex;
+  justify-content: center;
+  padding: 6vh 0;
+}

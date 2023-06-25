@@ -91,8 +91,22 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <nav>memory</nav>
-        <Board />
+        <nav className={styles.nav}>
+          <span>memory</span>
+          <div className={styles.navButtonContainer}>
+            <button
+              className={styles.buttonPrimary}
+              onClick={() => initialize()}
+            >
+              Restart
+            </button>
+            <button className={styles.buttonPrimary}>New Game</button>
+          </div>
+        </nav>
+        <div className={styles.boardContainer}>
+          <Board />
+        </div>
+
         <div>footer, moves: {Math.floor(flips / 2)}</div>
       </main>
     </>

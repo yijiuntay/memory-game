@@ -38,6 +38,16 @@
   --callout-border-rgb: 172, 175, 176;
   --card-rgb: 180, 185, 188;
   --card-border-rgb: 131, 134, 135;
+
+  --button-primary: #fda214;
+  --button-primary-hover: #ffb53e;
+  --button-secondary: #f2f2f2;
+  --button-secondary-hover: #6395b8;
+  --menu-idle: #bcced9;
+  --menu-active: #304859;
+  --menu-hover: #6395b8;
+  --text-primary: #152938;
+  --text-white: #fcfcfc;
 }
 
 @media (prefers-color-scheme: dark) {
