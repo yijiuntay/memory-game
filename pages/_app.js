@@ -2,7 +2,7 @@ import { Atkinson_Hyperlegible } from "@next/font/google";
 import "@/styles/globals.css";
 
 const atkinsonHyperlegible = Atkinson_Hyperlegible({
-  weight: "400",
+  weight: "700",
   subsets: ["latin"],
 });
 

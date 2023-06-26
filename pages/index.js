@@ -72,6 +72,22 @@ export default function Home() {
     }
   };
 
+  const Footer = () => (
+    <div className={styles.footer}>
+      <div className={styles.footerItem}></div>
+
+      <div className={styles.footerItem}>
+        <span className={styles.textSecondary}>Timer</span>
+        <span className={styles.textLevel2}>0:00</span>
+      </div>
+      <div className={styles.footerItem}>
+        <span className={styles.textSecondary}>Moves</span>
+        <span className={styles.textLevel2}>{Math.floor(flips / 2)}</span>
+      </div>
+      <div className={styles.footerItem}></div>
+    </div>
+  );
+
   useEffect(() => {
     if (matchedItems.length === 16) {
       setGameOver(true);
@@ -92,22 +108,24 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <nav className={styles.nav}>
-          <span>memory</span>
+          <span className={styles.textLevel1}>memory</span>
           <div className={styles.navButtonContainer}>
             <button
-              className={styles.buttonPrimary}
+              className={`${styles.button} ${styles.primary}`}
               onClick={() => initialize()}
             >
               Restart
             </button>
-            <button className={styles.buttonPrimary}>New Game</button>
+            <button className={`${styles.button} ${styles.secondary}`}>
+              New Game
+            </button>
           </div>
         </nav>
         <div className={styles.boardContainer}>
           <Board />
         </div>
 
-        <div>footer, moves: {Math.floor(flips / 2)}</div>
+        <Footer />
       </main>
     </>
   );
