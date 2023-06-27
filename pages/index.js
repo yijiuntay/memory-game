@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useState, useEffect, useRef } from "react";
 import Stopwatch from "../components/Stopwatch";
+import ModalDialog from "../components/ModalDialog";
 import styles from "@/styles/Home.module.css";
 
 export default function Home() {
@@ -55,6 +56,12 @@ export default function Home() {
     stopwatchRef.current.resetStopwatch();
   };
 
+  const getTime = () => {
+    if (stopwatchRef.current) {
+      return stopwatchRef.current.getTime();
+    }
+  };
+
   const shuffle = () => {
     const newBoard = [...nums1To8, ...nums1To8]
       .sort(() => Math.random() - 0.5)
@@ -96,13 +103,31 @@ export default function Home() {
     if (flips < 1) {
       startStopwatch();
     }
-    console.log("flip", i);
   };
+
+  const modalRef = useRef(null);
+
+  function openModal() {
+    const dialog = modalRef.current;
+
+    if (dialog) {
+      dialog.showModal();
+    }
+  }
+
+  function closeModal() {
+    const dialog = modalRef.current;
+
+    if (dialog) {
+      dialog.close();
+    }
+  }
 
   useEffect(() => {
     if (matchedItems.length === 16) {
       setGameOver(true);
       stopStopwatch();
+      openModal();
     }
   }, [flips]);
 
@@ -136,7 +161,7 @@ export default function Home() {
         <div className={styles.boardContainer}>
           <Board />
         </div>
-
+        <button onClick={openModal}>open modal</button>
         {/* footer */}
         <div className={styles.footer}>
           <div className={styles.footerItem}></div>
@@ -154,6 +179,46 @@ export default function Home() {
           <div className={styles.footerItem}></div>
         </div>
       </main>
+      <ModalDialog ref={modalRef}>
+        <div className={styles.statContainer}>
+          <span className={`${styles.textLevel1} ${styles.textPrimary}`}>
+            You did it!
+          </span>
+          <span className={styles.textSecondary}>
+            Game over! Here&apos;s how you got on...
+          </span>
+          <div className={styles.statSubcontainer}>
+            <div className={styles.statItem}>
+              <span className={styles.textSecondary}>Time Elapsed</span>
+              <span className={`${styles.textLevel2} ${styles.textPrimary}`}>
+                {getTime()}
+              </span>
+            </div>
+            <div className={styles.statItem}>
+              <span className={styles.textSecondary}>Moves Taken</span>
+              <span className={`${styles.textLevel2} ${styles.textPrimary}`}>
+                {Math.floor(flips / 2)} Moves
+              </span>
+            </div>
+          </div>
+          <div className={styles.buttonContainer}>
+            <button
+              className={`${styles.button} ${styles.primary} ${styles.statButton}`}
+              onClick={() => {
+                closeModal();
+                initialize();
+              }}
+            >
+              Restart
+            </button>
+            <button
+              className={`${styles.button} ${styles.secondary} ${styles.statButton}`}
+            >
+              Setup New Game
+            </button>
+          </div>
+        </div>
+      </ModalDialog>
     </>
   );
 }

@@ -58,6 +58,10 @@
   font-size: 48px;
 }
 
+.textPrimary {
+  color: var(--text-primary);
+}
+
 .textSecondary {
   color: var(--text-secondary);
 }
@@ -140,4 +144,41 @@
   width: 80%; /* Adjust circle size */
   height: 80%; /* Adjust circle size */
   border-radius: 50%;
+}
+
+.statContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+
+  .statSubcontainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+
+    .statItem {
+      width: 100%;
+      background: var(--button-secondary);
+      padding: 15px 25px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    .statButton {
+      width: 49%;
+    }
+  }
 }

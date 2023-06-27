@@ -24,6 +24,7 @@ const Stopwatch = forwardRef((props, ref) => {
     startStopwatch: () => startStopwatch(),
     stopStopwatch: () => stopStopwatch(),
     resetStopwatch: () => resetStopwatch(),
+    getTime: () => getTime(),
   }));
 
   const startStopwatch = () => {
@@ -46,6 +47,12 @@ const Stopwatch = forwardRef((props, ref) => {
     clearInterval(intervalRef.current);
     setIsRunning(false);
     setTime(0);
+  };
+
+  const getTime = () => {
+    return `${minutes.toString().padStart(1, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   const minutes = Math.floor((time % 360000) / 6000);

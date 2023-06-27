@@ -121,3 +121,17 @@ a {
     color-scheme: dark;
   }
 }
+
+.modal {
+  padding: 3rem 2rem;
+  background: var(--text-white);
+  border-radius: 0.25rem;
+  z-index: 10;
+  margin: auto;
+  width: 90vw;
+  max-width: 600px;
+}
+
+dialog::backdrop {
+  background-color: hsla(0, 0%, 0%, 0.5);
+}
