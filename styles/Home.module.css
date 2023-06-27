@@ -24,6 +24,7 @@
 
     .footerItem {
       width: 18%;
+      min-width: 200px;
       background: var(--button-secondary);
       padding: 15px 25px;
       border-radius: 8px;

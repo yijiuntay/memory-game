@@ -1,5 +1,6 @@
 import Head from "next/head";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import Stopwatch from "../components/Stopwatch";
 import styles from "@/styles/Home.module.css";
 
 export default function Home() {
@@ -35,6 +36,23 @@ export default function Home() {
     );
   };
 
+  // ref for stopwatch component
+  const stopwatchRef = useRef(null);
+
+  // Method to start and stop timer
+  const startStopwatch = () => {
+    stopwatchRef.current.startStopwatch();
+  };
+
+  const stopStopwatch = () => {
+    stopwatchRef.current.stopStopwatch();
+  };
+
+  // Method to reset timer back to 0
+  const resetStopwatch = () => {
+    stopwatchRef.current.resetStopwatch();
+  };
+
   const shuffle = () => {
     const newBoard = [...nums1To8, ...nums1To8]
       .sort(() => Math.random() - 0.5)
@@ -48,6 +66,7 @@ export default function Home() {
     setFlippedItems([]);
     setMatchedItems([]);
     setFlips(0);
+    resetStopwatch();
   };
 
   // handler function when user chooses item to flip
@@ -70,27 +89,18 @@ export default function Home() {
 
       setFlips((prev) => prev + 1);
     }
+
+    // check to start timer if first flip
+    if (flips < 1) {
+      startStopwatch();
+    }
+    console.log("flip", i);
   };
-
-  const Footer = () => (
-    <div className={styles.footer}>
-      <div className={styles.footerItem}></div>
-
-      <div className={styles.footerItem}>
-        <span className={styles.textSecondary}>Timer</span>
-        <span className={styles.textLevel2}>0:00</span>
-      </div>
-      <div className={styles.footerItem}>
-        <span className={styles.textSecondary}>Moves</span>
-        <span className={styles.textLevel2}>{Math.floor(flips / 2)}</span>
-      </div>
-      <div className={styles.footerItem}></div>
-    </div>
-  );
 
   useEffect(() => {
     if (matchedItems.length === 16) {
       setGameOver(true);
+      setIsRunning(false);
     }
   }, [flips]);
 
@@ -125,7 +135,22 @@ export default function Home() {
           <Board />
         </div>
 
-        <Footer />
+        {/* footer */}
+        <div className={styles.footer}>
+          <div className={styles.footerItem}></div>
+
+          <div className={styles.footerItem}>
+            <span className={styles.textSecondary}>Timer</span>
+            <span className={styles.textLevel2}>
+              <Stopwatch ref={stopwatchRef} />
+            </span>
+          </div>
+          <div className={styles.footerItem}>
+            <span className={styles.textSecondary}>Moves</span>
+            <span className={styles.textLevel2}>{Math.floor(flips / 2)}</span>
+          </div>
+          <div className={styles.footerItem}></div>
+        </div>
       </main>
     </>
   );
