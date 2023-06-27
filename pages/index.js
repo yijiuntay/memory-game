@@ -15,20 +15,22 @@ export default function Home() {
 
   const Board = () => {
     return (
-      <div className="board">
+      <div className={styles.board}>
         {board.map((data, i) => {
           const flipped = flippedItems.includes(i);
           const matched = matchedItems.includes(i);
           return (
             <div
               key={i}
-              className={`card ${flipped || matched ? "active" : ""} ${
-                matched ? "matched" : ""
-              } ${gameOver ? "gameover" : ""}`}
+              className={`${styles.card} ${
+                flipped || matched ? styles.active : ""
+              } ${matched ? styles.matched : ""} ${
+                gameOver ? styles.gameover : ""
+              }`}
               onClick={() => onFlip(i)}
             >
-              <div className="card-front">{data}</div>
-              <div className="card-back" />
+              <div className={styles.cardFront}>{data}</div>
+              <div className={styles.cardBack} />
             </div>
           );
         })}
@@ -100,7 +102,7 @@ export default function Home() {
   useEffect(() => {
     if (matchedItems.length === 16) {
       setGameOver(true);
-      setIsRunning(false);
+      stopStopwatch();
     }
   }, [flips]);
 

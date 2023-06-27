@@ -65,3 +65,79 @@
 .textLevel2 {
   font-size: 32px;
 }
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 100px); /* Increase card width */
+  grid-gap: 18px; /* Increase grid gap */
+}
+
+.card {
+  border-radius: 8px; /* Increase border radius */
+  text-align: center;
+  height: 100px; /* Increase card height */
+  font-size: 48px; /* Adjust font size */
+  font-weight: bold;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.card.gameover {
+  pointer-events: none;
+}
+
+.card-0 {
+  transform: rotateY(0deg);
+}
+
+.card.active {
+  transform: rotateY(180deg);
+}
+
+.card.matched .cardFront {
+  background-color: var(--button-primary);
+  color: white;
+}
+
+.cardFront,
+.cardBack {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  backface-visibility: hidden;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.cardFront {
+  transform: rotateY(180deg);
+  background-color: var(--menu-idle);
+  color: var(--text-white);
+  line-height: 90px; /* Adjust line-height */
+  vertical-align: middle;
+  text-align: center;
+  font-size: 48px; /* Adjust font size */
+  z-index: 2;
+  display: flex; /* Add flex display */
+  align-items: center; /* Center content vertically */
+  justify-content: center; /* Center content horizontally */
+}
+
+.cardBack {
+  background-color: var(--text-primary);
+  transform: rotateY(0);
+  z-index: 1;
+}
+
+.cardBack::after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 80%; /* Adjust circle size */
+  height: 80%; /* Adjust circle size */
+  border-radius: 50%;
+}
