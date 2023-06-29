@@ -6,6 +6,7 @@ import styles from "@/styles/Home.module.css";
 
 export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
+  const [gridSize, setGridSize] = useState(4);
   const [board, setBoard] = useState([]);
   const [flippedItems, setFlippedItems] = useState([]);
   const [matchedItems, setMatchedItems] = useState([]);
@@ -16,7 +17,7 @@ export default function Home() {
 
   const Board = () => {
     return (
-      <div className={styles.board}>
+      <div className={`${styles.board} ${gridSize === 6 ? styles.six : ""}`}>
         {board.map((data, i) => {
           const flipped = flippedItems.includes(i);
           const matched = matchedItems.includes(i);
@@ -24,10 +25,10 @@ export default function Home() {
             <div
               key={i}
               className={`${styles.card} ${
-                flipped || matched ? styles.active : ""
-              } ${matched ? styles.matched : ""} ${
-                gameOver ? styles.gameover : ""
-              }`}
+                gridSize === 6 ? styles.smaller : ""
+              } ${flipped || matched ? styles.active : ""} ${
+                matched ? styles.matched : ""
+              } ${gameOver ? styles.gameover : ""}`}
               onClick={() => onFlip(i)}
             >
               <div className={styles.cardFront}>{data}</div>
@@ -44,16 +45,22 @@ export default function Home() {
 
   // Method to start and stop timer
   const startStopwatch = () => {
-    stopwatchRef.current.startStopwatch();
+    if (stopwatchRef.current) {
+      stopwatchRef.current.startStopwatch();
+    }
   };
 
   const stopStopwatch = () => {
-    stopwatchRef.current.stopStopwatch();
+    if (stopwatchRef.current) {
+      stopwatchRef.current.stopStopwatch();
+    }
   };
 
   // Method to reset timer back to 0
   const resetStopwatch = () => {
-    stopwatchRef.current.resetStopwatch();
+    if (stopwatchRef.current) {
+      stopwatchRef.current.resetStopwatch();
+    }
   };
 
   const getTime = () => {
@@ -63,13 +70,15 @@ export default function Home() {
   };
 
   const shuffle = () => {
-    const newBoard = [...nums1To8, ...nums1To8]
+    const content = gridSize === 4 ? nums1To8 : nums1To18;
+    const newBoard = [...content, ...content]
       .sort(() => Math.random() - 0.5)
       .map((v) => v);
     setBoard(newBoard);
   };
 
   const initialize = () => {
+    setShowMenu(false);
     shuffle();
     setGameOver(false);
     setFlippedItems([]);
@@ -123,13 +132,23 @@ export default function Home() {
     }
   }
 
+  function endGame() {
+    setGameOver(true);
+    stopStopwatch();
+    openModal();
+  }
+
   useEffect(() => {
-    if (matchedItems.length === 16) {
-      setGameOver(true);
-      stopStopwatch();
-      openModal();
+    if (gridSize === 4) {
+      if (matchedItems.length === 16) {
+        endGame();
+      }
+    } else {
+      if (matchedItems.length === 36) {
+        endGame();
+      }
     }
-  }, [flips]);
+  }, [matchedItems]);
 
   useEffect(() => {
     initialize();
@@ -143,41 +162,82 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <nav className={styles.nav}>
-          <span className={styles.textLevel1}>memory</span>
-          <div className={styles.navButtonContainer}>
-            <button
-              className={`${styles.button} ${styles.primary}`}
-              onClick={() => initialize()}
-            >
-              Restart
-            </button>
-            <button className={`${styles.button} ${styles.secondary}`}>
-              New Game
-            </button>
-          </div>
-        </nav>
-        <div className={styles.boardContainer}>
-          <Board />
-        </div>
-        <button onClick={openModal}>open modal</button>
-        {/* footer */}
-        <div className={styles.footer}>
-          <div className={styles.footerItem}></div>
-
-          <div className={styles.footerItem}>
-            <span className={styles.textSecondary}>Timer</span>
-            <span className={styles.textLevel2}>
-              <Stopwatch ref={stopwatchRef} />
+      <main className={`${styles.main} ${showMenu ? styles.menu : ""}`}>
+        {showMenu ? (
+          <div className={styles.menuContainer}>
+            <span className={`${styles.textWhite} ${styles.textLevel1}`}>
+              memory
             </span>
+            <div className={styles.settings}>
+              <div className={styles.eachSetting}>
+                <span className={styles.textSecondary}>Grid Size</span>
+                <div className={styles.buttonContainer}>
+                  <button
+                    className={`${styles.button} ${styles.menu} ${
+                      gridSize === 4 ? styles.active : ""
+                    } ${styles.wider}`}
+                    onClick={() => setGridSize(4)}
+                  >
+                    4x4
+                  </button>
+                  <button
+                    className={`${styles.button} ${styles.menu} ${
+                      gridSize === 6 ? styles.active : ""
+                    } ${styles.wider}`}
+                    onClick={() => setGridSize(6)}
+                  >
+                    6x6
+                  </button>
+                </div>
+              </div>
+              <button
+                className={`${styles.button} ${styles.primary}`}
+                onClick={initialize}
+              >
+                Start Game
+              </button>
+            </div>
           </div>
-          <div className={styles.footerItem}>
-            <span className={styles.textSecondary}>Moves</span>
-            <span className={styles.textLevel2}>{Math.floor(flips / 2)}</span>
-          </div>
-          <div className={styles.footerItem}></div>
-        </div>
+        ) : (
+          <>
+            <nav className={styles.nav}>
+              <span className={styles.textLevel1}>memory</span>
+              <div className={styles.navButtonContainer}>
+                <button
+                  className={`${styles.button} ${styles.primary}`}
+                  onClick={() => initialize()}
+                >
+                  Restart
+                </button>
+                <button
+                  className={`${styles.button} ${styles.secondary} ${styles.textPrimary}`}
+                  onClick={() => setShowMenu(true)}
+                >
+                  New Game
+                </button>
+              </div>
+            </nav>
+            <div className={styles.boardContainer}>
+              <Board />
+            </div>
+            <button onClick={openModal}>open modal</button>
+            {/* footer */}
+            <div className={styles.footer}>
+              <div className={styles.footerItem}>
+                <span className={styles.textSecondary}>Timer</span>
+                <span className={styles.textLevel2}>
+                  <Stopwatch ref={stopwatchRef} />
+                </span>
+              </div>
+              <div className={styles.footerItem}>
+                <span className={styles.textSecondary}>Moves</span>
+                <span className={styles.textLevel2}>
+                  {Math.floor(flips / 2)}
+                </span>
+              </div>
+            </div>
+          </>
+        )}
       </main>
       <ModalDialog ref={modalRef}>
         <div className={styles.statContainer}>
@@ -212,7 +272,11 @@ export default function Home() {
               Restart
             </button>
             <button
-              className={`${styles.button} ${styles.secondary} ${styles.statButton}`}
+              className={`${styles.button} ${styles.secondary} ${styles.textPrimary} ${styles.statButton}`}
+              onClick={() => {
+                closeModal();
+                setShowMenu(true);
+              }}
             >
               Setup New Game
             </button>
