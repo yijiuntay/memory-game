@@ -2,6 +2,11 @@
   padding: 6vh 10vw;
   height: 100vh;
 
+  &.menu {
+    background-color: var(--text-primary);
+    padding: 15vh 10vw;
+  }
+
   .nav {
     display: flex;
     justify-content: space-between;
@@ -20,10 +25,11 @@
 
   .footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 2%;
 
     .footerItem {
-      width: 18%;
+      width: 24%;
       min-width: 200px;
       background: var(--button-secondary);
       padding: 15px 25px;
@@ -31,6 +37,38 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+  }
+
+  .menuContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    align-items: center;
+
+    .settings {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      width: 50%;
+      background: var(--text-white);
+      padding: 50px;
+
+      .eachSetting {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        .buttonContainer {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+
+          .wider {
+            width: 48%;
+          }
+        }
+      }
     }
   }
 }
@@ -48,9 +86,29 @@
     background-color: var(--button-primary);
   }
 
+  &.primary:hover {
+    background-color: var(--button-primary-hover);
+  }
+
   &.secondary {
     background-color: var(--button-secondary);
-    color: var(--text-primary);
+  }
+
+  &.secondary:hover {
+    background-color: var(--button-secondary-hover);
+    color: var(--text-white);
+  }
+
+  &.menu {
+    background-color: var(--menu-idle);
+
+    &.active {
+      background-color: var(--menu-active);
+    }
+  }
+
+  &.menu:hover {
+    background-color: var(--menu-hover);
   }
 }
 
@@ -66,6 +124,10 @@
   color: var(--text-secondary);
 }
 
+.textWhite {
+  color: var(--text-white);
+}
+
 .textLevel2 {
   font-size: 32px;
 }
@@ -74,18 +136,25 @@
   display: grid;
   grid-template-columns: repeat(4, 100px); /* Increase card width */
   grid-gap: 18px; /* Increase grid gap */
+
+  &.six {
+    grid-template-columns: repeat(6, 80px); /* Increase card width */
+  }
 }
 
 .card {
   border-radius: 8px; /* Increase border radius */
   text-align: center;
   height: 100px; /* Increase card height */
-  font-size: 48px; /* Adjust font size */
   font-weight: bold;
   position: relative;
   transform-style: preserve-3d;
   transition: all 0.2s;
   user-select: none;
+
+  &.smaller {
+    height: 80px;
+  }
 }
 
 .card.gameover {
