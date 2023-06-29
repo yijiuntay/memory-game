@@ -67,6 +67,10 @@
           .wider {
             width: 48%;
           }
+
+          .narrower {
+            width: 23%;
+          }
         }
       }
     }

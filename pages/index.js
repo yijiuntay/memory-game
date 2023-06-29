@@ -29,6 +29,9 @@ export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
   const [gridSize, setGridSize] = useState(4);
   const [theme, setTheme] = useState("nums");
+  const [numPlayers, setNumPlayers] = useState(1);
+  const [currentPlayer, setCurrentPlayer] = useState(0);
+  const [players, setPlayers] = useState([]);
   const [board, setBoard] = useState([]);
   const [flippedItems, setFlippedItems] = useState([]);
   const [matchedItems, setMatchedItems] = useState([]);
@@ -110,9 +113,6 @@ export default function Home() {
   };
 
   const shuffle = () => {
-    const nums1To8 = [...Array(8).keys()].map((i) => i + 1);
-    const nums1To18 = [...Array(18).keys()].map((i) => i + 1);
-
     const content =
       theme === "nums"
         ? gridSize === 4
@@ -128,9 +128,16 @@ export default function Home() {
     setBoard(newBoard);
   };
 
+  const createPlayers = () => {
+    const playerScores = [...Array(numPlayers).keys()].map((i) => i - i);
+    setPlayers(playerScores);
+  };
+
   const initialize = () => {
     setShowMenu(false);
     shuffle();
+    createPlayers();
+    setCurrentPlayer(0);
     setGameOver(false);
     setFlippedItems([]);
     setMatchedItems([]);
@@ -156,7 +163,17 @@ export default function Home() {
         setFlippedItems([...flippedItems, i]);
       }
 
-      setFlips((prev) => prev + 1);
+      if (numPlayers === 1) {
+        setFlips((prev) => prev + 1);
+      } else {
+        const newScore = players.map((score, index) =>
+          index === currentPlayer ? score + 1 : score
+        );
+        setPlayers(newScore);
+        if (newScore[currentPlayer] % 2 === 0) {
+          setCurrentPlayer((prev) => (prev < numPlayers - 1 ? prev + 1 : 0));
+        }
+      }
     }
 
     // check to start timer if first flip
@@ -242,6 +259,43 @@ export default function Home() {
                 </div>
               </div>
               <div className={styles.eachSetting}>
+                <span className={styles.textSecondary}>Number of Players</span>
+                <div className={styles.buttonContainer}>
+                  <button
+                    className={`${styles.button} ${styles.menu} ${
+                      numPlayers === 1 ? styles.active : ""
+                    } ${styles.narrower}`}
+                    onClick={() => setNumPlayers(1)}
+                  >
+                    1
+                  </button>
+                  <button
+                    className={`${styles.button} ${styles.menu} ${
+                      numPlayers === 2 ? styles.active : ""
+                    } ${styles.narrower}`}
+                    onClick={() => setNumPlayers(2)}
+                  >
+                    2
+                  </button>
+                  <button
+                    className={`${styles.button} ${styles.menu} ${
+                      numPlayers === 3 ? styles.active : ""
+                    } ${styles.narrower}`}
+                    onClick={() => setNumPlayers(3)}
+                  >
+                    3
+                  </button>
+                  <button
+                    className={`${styles.button} ${styles.menu} ${
+                      numPlayers === 4 ? styles.active : ""
+                    } ${styles.narrower}`}
+                    onClick={() => setNumPlayers(4)}
+                  >
+                    4
+                  </button>
+                </div>
+              </div>
+              <div className={styles.eachSetting}>
                 <span className={styles.textSecondary}>Grid Size</span>
                 <div className={styles.buttonContainer}>
                   <button
@@ -295,18 +349,35 @@ export default function Home() {
             <button onClick={openModal}>open modal</button>
             {/* footer */}
             <div className={styles.footer}>
-              <div className={styles.footerItem}>
-                <span className={styles.textSecondary}>Timer</span>
-                <span className={styles.textLevel2}>
-                  <Stopwatch ref={stopwatchRef} />
-                </span>
-              </div>
-              <div className={styles.footerItem}>
-                <span className={styles.textSecondary}>Moves</span>
-                <span className={styles.textLevel2}>
-                  {Math.floor(flips / 2)}
-                </span>
-              </div>
+              {numPlayers === 1 ? (
+                <>
+                  <div className={styles.footerItem}>
+                    <span className={styles.textSecondary}>Timer</span>
+                    <span className={styles.textLevel2}>
+                      <Stopwatch ref={stopwatchRef} />
+                    </span>
+                  </div>
+                  <div className={styles.footerItem}>
+                    <span className={styles.textSecondary}>Moves</span>
+                    <span className={styles.textLevel2}>
+                      {Math.floor(flips / 2)}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {players.map((score, index) => (
+                    <div className={styles.footerItem}>
+                      <span className={styles.textSecondary}>
+                        Player {index + 1}
+                      </span>
+                      <span className={styles.textLevel2}>
+                        {Math.floor(score / 2)}
+                      </span>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           </>
         )}
