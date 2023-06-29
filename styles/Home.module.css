@@ -21,6 +21,7 @@
     display: flex;
     justify-content: center;
     padding: 6vh 0;
+    margin-bottom: 40px;
   }
 
   .footer {
@@ -29,8 +30,7 @@
     gap: 2%;
 
     .footerItem {
-      width: 24%;
-      min-width: 200px;
+      width: 24vw;
       background: var(--button-secondary);
       padding: 15px 25px;
       border-radius: 8px;
@@ -55,11 +55,24 @@
         border-right: 16px solid transparent;
         border-bottom: 20px solid var(--button-primary);
       }
+
+      &.wider {
+        width: 40vw;
+        max-width: 250px;
+      }
+
+      &.alignVertical {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      &.alignCenter {
+        align-items: center;
+      }
     }
 
     .secondaryFooterItem {
-      width: 24%;
-      min-width: 200px;
+      width: 24vw;
       padding: 15px 25px;
       text-align: center;
     }
@@ -81,9 +94,11 @@
       display: flex;
       flex-direction: column;
       gap: 40px;
-      width: 50%;
+      width: 80vw;
+      max-width: 800px;
       background: var(--text-white);
-      padding: 50px;
+      padding: 6vw;
+      border-radius: 20px;
 
       .eachSetting {
         display: flex;
@@ -108,8 +123,18 @@
   }
 }
 
+@media only screen and (max-width: 769px) {
+  .main {
+    padding: 3vh 5vw;
+
+    .boardContainer {
+      padding: 8vh 0;
+    }
+  }
+}
+
 .button {
-  padding: 10px 30px;
+  padding: 10px 2vw;
   font-size: 20px;
   font-family: inherit;
   font-weight: inherit;
@@ -168,6 +193,63 @@
 
 .textLevel2 {
   font-size: 32px;
+}
+
+@media only screen and (max-width: 426px) {
+  .main {
+    .menuContainer {
+      gap: 15vw;
+
+      .settings {
+        gap: 8vw;
+      }
+    }
+  }
+
+  .board {
+    grid-template-columns: repeat(4, 20vw) !important; /* Increase card width */
+    grid-gap: 2vw !important; /* Increase grid gap */
+
+    &.six {
+      grid-template-columns: repeat(
+        6,
+        13vw
+      ) !important; /* Increase card width */
+    }
+  }
+
+  .card {
+    height: 20vw !important; /* Increase card height */
+
+    &.smaller {
+      height: 13vw !important;
+    }
+  }
+
+  .textLevel1 {
+    font-size: 36px !important;
+  }
+
+  .textLevel2 {
+    font-size: 20px !important;
+  }
+
+  .button {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+
+  .statContainer {
+    .buttonContainer {
+      flex-direction: column;
+      justify-content: center;
+      gap: 15px;
+
+      .statButton {
+        width: 100% !important;
+      }
+    }
+  }
 }
 
 .board {
@@ -289,11 +371,15 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 30px;
     margin-bottom: 10px;
 
     .statButton {
       width: 49%;
     }
+  }
+
+  .fullWidth {
+    width: 100%;
   }
 }
