@@ -2,7 +2,6 @@ import Head from "next/head";
 import { useState, useEffect, useRef } from "react";
 import Stopwatch from "../components/Stopwatch";
 import ModalDialog from "../components/ModalDialog";
-import { Icons } from "../components/Icons";
 import styles from "@/styles/Home.module.css";
 
 export default function Home() {
@@ -244,7 +243,6 @@ export default function Home() {
               <Board />
             </div>
             <button onClick={openModal}>open modal</button>
-            {Icons[0]}
             {/* footer */}
             <div className={styles.footer}>
               <div className={styles.footerItem}>
