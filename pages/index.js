@@ -1,7 +1,28 @@
+/* eslint-disable react/jsx-key */
 import Head from "next/head";
 import { useState, useEffect, useRef } from "react";
 import Stopwatch from "../components/Stopwatch";
 import ModalDialog from "../components/ModalDialog";
+import {
+  FaCanadianMapleLeaf,
+  FaCss3Alt,
+  FaDev,
+  FaBasketballBall,
+  FaEllo,
+  FaEdge,
+  FaFontAwesomeFlag,
+  FaFreebsd,
+  FaFreeCodeCamp,
+  FaFortAwesome,
+  FaGithub,
+  FaInstagram,
+  FaJenkins,
+  FaLinux,
+  FaNpm,
+  FaPagelines,
+  FaBabyCarriage,
+  FaBath,
+} from "react-icons/fa";
 import styles from "@/styles/Home.module.css";
 
 export default function Home() {
@@ -13,8 +34,26 @@ export default function Home() {
   const [matchedItems, setMatchedItems] = useState([]);
   const [flips, setFlips] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const nums1To8 = [...Array(8).keys()].map((i) => i + 1);
-  const nums1To18 = [...Array(18).keys()].map((i) => i + 1);
+  const iconArray = [
+    <FaCanadianMapleLeaf />,
+    <FaCss3Alt />,
+    <FaDev />,
+    <FaBasketballBall />,
+    <FaEllo />,
+    <FaEdge />,
+    <FaFontAwesomeFlag />,
+    <FaFreebsd />,
+    <FaFreeCodeCamp />,
+    <FaFortAwesome />,
+    <FaGithub />,
+    <FaInstagram />,
+    <FaJenkins />,
+    <FaLinux />,
+    <FaNpm />,
+    <FaPagelines />,
+    <FaBabyCarriage />,
+    <FaBath />,
+  ];
 
   const Board = () => {
     return (
@@ -71,7 +110,18 @@ export default function Home() {
   };
 
   const shuffle = () => {
-    const content = gridSize === 4 ? nums1To8 : nums1To18;
+    const nums1To8 = [...Array(8).keys()].map((i) => i + 1);
+    const nums1To18 = [...Array(18).keys()].map((i) => i + 1);
+
+    const content =
+      theme === "nums"
+        ? gridSize === 4
+          ? [...Array(8).keys()].map((i) => i + 1)
+          : [...Array(18).keys()].map((i) => i + 1)
+        : gridSize === 4
+        ? iconArray.slice(0, 8)
+        : iconArray.slice();
+
     const newBoard = [...content, ...content]
       .sort(() => Math.random() - 0.5)
       .map((v) => v);
