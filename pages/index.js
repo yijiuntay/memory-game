@@ -23,12 +23,19 @@ import {
   FaBabyCarriage,
   FaBath,
 } from "react-icons/fa";
+import { IconContext } from "react-icons";
+import { useMediaQuery } from "react-responsive";
 import styles from "@/styles/Home.module.css";
 
 export default function Home() {
+  const isTablet = useMediaQuery({ maxWidth: 769 });
+  const isMobile = useMediaQuery({ maxWidth: 426 });
   const [showMenu, setShowMenu] = useState(false);
   const [gridSize, setGridSize] = useState(4);
   const [theme, setTheme] = useState("nums");
+  const [numPlayers, setNumPlayers] = useState(1);
+  const [currentPlayer, setCurrentPlayer] = useState(0);
+  const [players, setPlayers] = useState([]);
   const [board, setBoard] = useState([]);
   const [flippedItems, setFlippedItems] = useState([]);
   const [matchedItems, setMatchedItems] = useState([]);
@@ -57,26 +64,28 @@ export default function Home() {
 
   const Board = () => {
     return (
-      <div className={`${styles.board} ${gridSize === 6 ? styles.six : ""}`}>
-        {board.map((data, i) => {
-          const flipped = flippedItems.includes(i);
-          const matched = matchedItems.includes(i);
-          return (
-            <div
-              key={i}
-              className={`${styles.card} ${
-                gridSize === 6 ? styles.smaller : ""
-              } ${flipped || matched ? styles.active : ""} ${
-                matched ? styles.matched : ""
-              } ${gameOver ? styles.gameover : ""}`}
-              onClick={() => onFlip(i)}
-            >
-              <div className={styles.cardFront}>{data}</div>
-              <div className={styles.cardBack} />
-            </div>
-          );
-        })}
-      </div>
+      <IconContext.Provider value={{ size: isMobile ? "0.6em" : "1em" }}>
+        <div className={`${styles.board} ${gridSize === 6 ? styles.six : ""}`}>
+          {board.map((data, i) => {
+            const flipped = flippedItems.includes(i);
+            const matched = matchedItems.includes(i);
+            return (
+              <div
+                key={i}
+                className={`${styles.card} ${
+                  gridSize === 6 ? styles.smaller : ""
+                } ${flipped || matched ? styles.active : ""} ${
+                  matched ? styles.matched : ""
+                } ${gameOver ? styles.gameover : ""}`}
+                onClick={() => onFlip(i)}
+              >
+                <div className={styles.cardFront}>{data}</div>
+                <div className={styles.cardBack} />
+              </div>
+            );
+          })}
+        </div>
+      </IconContext.Provider>
     );
   };
 
@@ -110,9 +119,6 @@ export default function Home() {
   };
 
   const shuffle = () => {
-    const nums1To8 = [...Array(8).keys()].map((i) => i + 1);
-    const nums1To18 = [...Array(18).keys()].map((i) => i + 1);
-
     const content =
       theme === "nums"
         ? gridSize === 4
@@ -128,9 +134,16 @@ export default function Home() {
     setBoard(newBoard);
   };
 
+  const createPlayers = () => {
+    const playerScores = [...Array(numPlayers).keys()].map((i) => i - i);
+    setPlayers(playerScores);
+  };
+
   const initialize = () => {
     setShowMenu(false);
     shuffle();
+    createPlayers();
+    setCurrentPlayer(0);
     setGameOver(false);
     setFlippedItems([]);
     setMatchedItems([]);
@@ -147,6 +160,10 @@ export default function Home() {
         // check if the current chosen item is the same as the other flipped item on the board
         if (board[i] === board[flippedItems[0]]) {
           setMatchedItems((prev) => [...prev, i, flippedItems[0]]);
+          const newScore = players.map((score, index) =>
+            index === currentPlayer ? score + 1 : score
+          );
+          setPlayers(newScore);
         }
 
         setFlippedItems([...flippedItems, i]);
@@ -156,6 +173,9 @@ export default function Home() {
         setFlippedItems([...flippedItems, i]);
       }
 
+      if ((flips + 1) % 2 === 0) {
+        setCurrentPlayer((prev) => (prev < numPlayers - 1 ? prev + 1 : 0));
+      }
       setFlips((prev) => prev + 1);
     }
 
@@ -183,11 +203,119 @@ export default function Home() {
     }
   }
 
+  const pauseModalRef = useRef(null);
+
+  function openPauseModal() {
+    const dialog = pauseModalRef.current;
+
+    if (dialog) {
+      dialog.showModal();
+    }
+  }
+
+  function closePauseModal() {
+    const dialog = pauseModalRef.current;
+
+    if (dialog) {
+      dialog.close();
+    }
+  }
+
   function endGame() {
     setGameOver(true);
     stopStopwatch();
     openModal();
   }
+
+  const getModalContent = () => {
+    const rankedScore = players.map((score, index) => [index + 1, score]);
+    rankedScore.sort((a, b) => b[1] - a[1]);
+    const topScore = rankedScore[0] ? rankedScore[0][1] : "";
+    const numTopScore = players.filter((i) => i === topScore).length;
+    const playerIndex = players.indexOf(topScore);
+
+    return (
+      <div className={styles.statContainer}>
+        <span className={`${styles.textLevel1} ${styles.textPrimary}`}>
+          {numPlayers === 1
+            ? "You did it!"
+            : numTopScore > 1
+            ? "It's a tie!"
+            : `Player ${playerIndex + 1} Wins!`}
+        </span>
+        <span className={styles.textSecondary}>
+          {`Game over! ${
+            numPlayers === 1 ? "Here's how you got on" : "Here are the results"
+          }...`}
+        </span>
+        <div className={styles.statSubcontainer}>
+          {numPlayers === 1 ? (
+            <>
+              <div className={styles.statItem}>
+                <span className={styles.textSecondary}>Time Elapsed</span>
+                <span className={`${styles.textLevel2} ${styles.textPrimary}`}>
+                  {getTime()}
+                </span>
+              </div>
+              <div className={styles.statItem}>
+                <span className={styles.textSecondary}>Moves Taken</span>
+                <span className={`${styles.textLevel2} ${styles.textPrimary}`}>
+                  {Math.floor(flips / 2)} Moves
+                </span>
+              </div>
+            </>
+          ) : (
+            <>
+              {rankedScore.map(([index, score]) => (
+                <div
+                  className={`${styles.statItem} ${
+                    score === topScore ? styles.winner : ""
+                  }`}
+                >
+                  <span
+                    className={
+                      score === topScore
+                        ? styles.textWhite
+                        : styles.textSecondary
+                    }
+                  >{`Player ${index} ${
+                    score === topScore ? "(Winner!)" : ""
+                  }`}</span>
+                  <span
+                    className={`${styles.textLevel2} ${
+                      score === topScore ? styles.textWhite : styles.textPrimary
+                    }`}
+                  >
+                    {score} Pairs
+                  </span>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+        <div className={styles.buttonContainer}>
+          <button
+            className={`${styles.button} ${styles.primary} ${styles.statButton}`}
+            onClick={() => {
+              closeModal();
+              initialize();
+            }}
+          >
+            Restart
+          </button>
+          <button
+            className={`${styles.button} ${styles.secondary} ${styles.textPrimary} ${styles.statButton}`}
+            onClick={() => {
+              closeModal();
+              setShowMenu(true);
+            }}
+          >
+            Setup New Game
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   useEffect(() => {
     if (gridSize === 4) {
@@ -208,8 +336,12 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Memory Game</title>
-        <meta name="description" content="Memory Game" />
+        <title>Memory Game with Multiplayer</title>
+        <meta
+          name="description"
+          content="Memory Game with Multiplayer Mode"
+          key="desc"
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -238,6 +370,43 @@ export default function Home() {
                     onClick={() => setTheme("icons")}
                   >
                     Icons
+                  </button>
+                </div>
+              </div>
+              <div className={styles.eachSetting}>
+                <span className={styles.textSecondary}>Number of Players</span>
+                <div className={styles.buttonContainer}>
+                  <button
+                    className={`${styles.button} ${styles.menu} ${
+                      numPlayers === 1 ? styles.active : ""
+                    } ${styles.narrower}`}
+                    onClick={() => setNumPlayers(1)}
+                  >
+                    1
+                  </button>
+                  <button
+                    className={`${styles.button} ${styles.menu} ${
+                      numPlayers === 2 ? styles.active : ""
+                    } ${styles.narrower}`}
+                    onClick={() => setNumPlayers(2)}
+                  >
+                    2
+                  </button>
+                  <button
+                    className={`${styles.button} ${styles.menu} ${
+                      numPlayers === 3 ? styles.active : ""
+                    } ${styles.narrower}`}
+                    onClick={() => setNumPlayers(3)}
+                  >
+                    3
+                  </button>
+                  <button
+                    className={`${styles.button} ${styles.menu} ${
+                      numPlayers === 4 ? styles.active : ""
+                    } ${styles.narrower}`}
+                    onClick={() => setNumPlayers(4)}
+                  >
+                    4
                   </button>
                 </div>
               </div>
@@ -275,84 +444,142 @@ export default function Home() {
             <nav className={styles.nav}>
               <span className={styles.textLevel1}>memory</span>
               <div className={styles.navButtonContainer}>
-                <button
-                  className={`${styles.button} ${styles.primary}`}
-                  onClick={() => initialize()}
-                >
-                  Restart
-                </button>
-                <button
-                  className={`${styles.button} ${styles.secondary} ${styles.textPrimary}`}
-                  onClick={() => setShowMenu(true)}
-                >
-                  New Game
-                </button>
+                {!isMobile ? (
+                  <>
+                    <button
+                      className={`${styles.button} ${styles.primary}`}
+                      onClick={() => initialize()}
+                    >
+                      Restart
+                    </button>
+                    <button
+                      className={`${styles.button} ${styles.secondary} ${styles.textPrimary}`}
+                      onClick={() => setShowMenu(true)}
+                    >
+                      New Game
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    className={`${styles.button} ${styles.primary}`}
+                    onClick={() => {
+                      openPauseModal();
+                      stopStopwatch();
+                    }}
+                  >
+                    Menu
+                  </button>
+                )}
               </div>
             </nav>
             <div className={styles.boardContainer}>
               <Board />
             </div>
-            <button onClick={openModal}>open modal</button>
+
             {/* footer */}
-            <div className={styles.footer}>
-              <div className={styles.footerItem}>
-                <span className={styles.textSecondary}>Timer</span>
-                <span className={styles.textLevel2}>
-                  <Stopwatch ref={stopwatchRef} />
-                </span>
+            {numPlayers === 1 ? (
+              <div className={styles.footer}>
+                <div
+                  className={`${styles.footerItem} ${styles.wider} ${
+                    isMobile
+                      ? `${styles.alignVertical} ${styles.alignCenter}`
+                      : ""
+                  }`}
+                >
+                  <span className={styles.textSecondary}>Timer</span>
+                  <span className={styles.textLevel2}>
+                    <Stopwatch ref={stopwatchRef} />
+                  </span>
+                </div>
+                <div
+                  className={`${styles.footerItem} ${styles.wider} ${
+                    isMobile
+                      ? `${styles.alignVertical} ${styles.alignCenter}`
+                      : ""
+                  }`}
+                >
+                  <span className={styles.textSecondary}>Moves</span>
+                  <span className={styles.textLevel2}>
+                    {Math.floor(flips / 2)}
+                  </span>
+                </div>
               </div>
-              <div className={styles.footerItem}>
-                <span className={styles.textSecondary}>Moves</span>
-                <span className={styles.textLevel2}>
-                  {Math.floor(flips / 2)}
-                </span>
+            ) : (
+              <div className={styles.multiplayerStatContainer}>
+                <div className={styles.footer}>
+                  {players.map((score, index) => (
+                    <div
+                      className={`${styles.footerItem} ${
+                        index === currentPlayer ? styles.active : ""
+                      } ${isTablet ? styles.alignVertical : ""} ${
+                        isMobile ? styles.alignCenter : ""
+                      }`}
+                    >
+                      <span
+                        className={
+                          index === currentPlayer
+                            ? styles.textWhite
+                            : styles.textSecondary
+                        }
+                      >
+                        {`${isMobile ? "P" : "Player "}${index + 1}`}
+                      </span>
+                      <span
+                        className={`${styles.textLevel2} ${
+                          index === currentPlayer ? styles.textWhite : ""
+                        }`}
+                      >
+                        {score}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                {!isTablet && (
+                  <div className={styles.footer}>
+                    {players.map((score, index) => (
+                      <div className={styles.secondaryFooterItem}>
+                        {index === currentPlayer && "CURRENT TURN"}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
+            )}
           </>
         )}
       </main>
-      <ModalDialog ref={modalRef}>
+      <ModalDialog ref={modalRef}>{getModalContent()}</ModalDialog>
+      <ModalDialog ref={pauseModalRef}>
         <div className={styles.statContainer}>
-          <span className={`${styles.textLevel1} ${styles.textPrimary}`}>
-            You did it!
-          </span>
-          <span className={styles.textSecondary}>
-            Game over! Here&apos;s how you got on...
-          </span>
-          <div className={styles.statSubcontainer}>
-            <div className={styles.statItem}>
-              <span className={styles.textSecondary}>Time Elapsed</span>
-              <span className={`${styles.textLevel2} ${styles.textPrimary}`}>
-                {getTime()}
-              </span>
-            </div>
-            <div className={styles.statItem}>
-              <span className={styles.textSecondary}>Moves Taken</span>
-              <span className={`${styles.textLevel2} ${styles.textPrimary}`}>
-                {Math.floor(flips / 2)} Moves
-              </span>
-            </div>
-          </div>
-          <div className={styles.buttonContainer}>
-            <button
-              className={`${styles.button} ${styles.primary} ${styles.statButton}`}
-              onClick={() => {
-                closeModal();
-                initialize();
-              }}
-            >
-              Restart
-            </button>
-            <button
-              className={`${styles.button} ${styles.secondary} ${styles.textPrimary} ${styles.statButton}`}
-              onClick={() => {
-                closeModal();
-                setShowMenu(true);
-              }}
-            >
-              Setup New Game
-            </button>
-          </div>
+          <button
+            className={`${styles.button} ${styles.primary} ${styles.fullWidth}`}
+            onClick={() => {
+              closePauseModal();
+              initialize();
+            }}
+          >
+            Restart
+          </button>
+          <button
+            className={`${styles.button} ${styles.secondary} ${styles.textPrimary} ${styles.fullWidth}`}
+            onClick={() => {
+              closePauseModal();
+              setShowMenu(true);
+            }}
+          >
+            New Game
+          </button>
+          <button
+            className={`${styles.button} ${styles.secondary} ${styles.textPrimary} ${styles.fullWidth}`}
+            onClick={() => {
+              closePauseModal();
+              if (flips > 0) {
+                startStopwatch();
+              }
+            }}
+          >
+            Resume Game
+          </button>
         </div>
       </ModalDialog>
     </>
