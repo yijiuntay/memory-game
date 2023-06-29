@@ -2,11 +2,13 @@ import Head from "next/head";
 import { useState, useEffect, useRef } from "react";
 import Stopwatch from "../components/Stopwatch";
 import ModalDialog from "../components/ModalDialog";
+import { Icons } from "../components/Icons";
 import styles from "@/styles/Home.module.css";
 
 export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
   const [gridSize, setGridSize] = useState(4);
+  const [theme, setTheme] = useState("nums");
   const [board, setBoard] = useState([]);
   const [flippedItems, setFlippedItems] = useState([]);
   const [matchedItems, setMatchedItems] = useState([]);
@@ -170,6 +172,27 @@ export default function Home() {
             </span>
             <div className={styles.settings}>
               <div className={styles.eachSetting}>
+                <span className={styles.textSecondary}>Select Theme</span>
+                <div className={styles.buttonContainer}>
+                  <button
+                    className={`${styles.button} ${styles.menu} ${
+                      theme === "nums" ? styles.active : ""
+                    } ${styles.wider}`}
+                    onClick={() => setTheme("nums")}
+                  >
+                    Numbers
+                  </button>
+                  <button
+                    className={`${styles.button} ${styles.menu} ${
+                      theme === "icons" ? styles.active : ""
+                    } ${styles.wider}`}
+                    onClick={() => setTheme("icons")}
+                  >
+                    Icons
+                  </button>
+                </div>
+              </div>
+              <div className={styles.eachSetting}>
                 <span className={styles.textSecondary}>Grid Size</span>
                 <div className={styles.buttonContainer}>
                   <button
@@ -221,6 +244,7 @@ export default function Home() {
               <Board />
             </div>
             <button onClick={openModal}>open modal</button>
+            {Icons[0]}
             {/* footer */}
             <div className={styles.footer}>
               <div className={styles.footerItem}>
