@@ -354,7 +354,7 @@ export default function Home() {
             <div className={styles.settings}>
               <div className={styles.eachSetting}>
                 <span className={styles.textSecondary}>Select Theme</span>
-                <div className={styles.buttonContainer}>
+                <div className={styles.settingButtonContainer}>
                   <button
                     className={`${styles.button} ${styles.menu} ${
                       theme === "nums" ? styles.active : ""
@@ -375,7 +375,7 @@ export default function Home() {
               </div>
               <div className={styles.eachSetting}>
                 <span className={styles.textSecondary}>Number of Players</span>
-                <div className={styles.buttonContainer}>
+                <div className={styles.settingButtonContainer}>
                   <button
                     className={`${styles.button} ${styles.menu} ${
                       numPlayers === 1 ? styles.active : ""
@@ -412,7 +412,7 @@ export default function Home() {
               </div>
               <div className={styles.eachSetting}>
                 <span className={styles.textSecondary}>Grid Size</span>
-                <div className={styles.buttonContainer}>
+                <div className={styles.settingButtonContainer}>
                   <button
                     className={`${styles.button} ${styles.menu} ${
                       gridSize === 4 ? styles.active : ""

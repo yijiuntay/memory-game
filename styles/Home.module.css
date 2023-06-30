@@ -28,54 +28,54 @@
     display: flex;
     justify-content: center;
     gap: 2%;
+  }
 
-    .footerItem {
-      width: 24vw;
-      background: var(--button-secondary);
-      padding: 15px 25px;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
+  .footerItem {
+    width: 24vw;
+    background: var(--button-secondary);
+    padding: 15px 25px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+
+    &.active {
+      background: var(--button-primary);
+    }
+
+    &.active::before {
+      content: "";
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+      border-bottom: 20px solid var(--button-primary);
+    }
+
+    &.wider {
+      width: 40vw;
+      max-width: 250px;
+    }
+
+    &.alignVertical {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    &.alignCenter {
       align-items: center;
-      position: relative;
-
-      &.active {
-        background: var(--button-primary);
-      }
-
-      &.active::before {
-        content: "";
-        position: absolute;
-        top: -20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 0;
-        height: 0;
-        border-left: 16px solid transparent;
-        border-right: 16px solid transparent;
-        border-bottom: 20px solid var(--button-primary);
-      }
-
-      &.wider {
-        width: 40vw;
-        max-width: 250px;
-      }
-
-      &.alignVertical {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      &.alignCenter {
-        align-items: center;
-      }
     }
+  }
 
-    .secondaryFooterItem {
-      width: 24vw;
-      padding: 15px 25px;
-      text-align: center;
-    }
+  .secondaryFooterItem {
+    width: 24vw;
+    padding: 15px 25px;
+    text-align: center;
   }
 
   .multiplayerStatContainer {
@@ -89,36 +89,36 @@
     flex-direction: column;
     gap: 80px;
     align-items: center;
+  }
 
-    .settings {
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-      width: 80vw;
-      max-width: 800px;
-      background: var(--text-white);
-      padding: 6vw;
-      border-radius: 20px;
+  .settings {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 80vw;
+    max-width: 800px;
+    background: var(--text-white);
+    padding: 6vw;
+    border-radius: 20px;
+  }
 
-      .eachSetting {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
+  .eachSetting {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
 
-        .buttonContainer {
-          width: 100%;
-          display: flex;
-          justify-content: space-between;
+  .settingButtonContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 
-          .wider {
-            width: 48%;
-          }
+    .wider {
+      width: 48%;
+    }
 
-          .narrower {
-            width: 23%;
-          }
-        }
-      }
+    .narrower {
+      width: 23%;
     }
   }
 }
@@ -199,10 +199,10 @@
   .main {
     .menuContainer {
       gap: 15vw;
+    }
 
-      .settings {
-        gap: 8vw;
-      }
+    .settings {
+      gap: 8vw;
     }
   }
 
