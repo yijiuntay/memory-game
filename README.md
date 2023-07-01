@@ -1,38 +1,69 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Memory Game
+
+A fun memory game built with Next.js, React, JavaScript, and CSS.
+
+![image](https://github.com/yijiuntay/memory-game/assets/86616844/7d04890d-9783-43c3-b82c-dbe3ec082c31)
+
+
+## Features
+
+- Single-player mode
+- Multiplayer mode (up to 4 players)
+- Selectable themes: Numbers or Icons
+- Adjustable grid size (4x4 or 6x6)
+- Timer to track elapsed time
+- Move counter
+- Game statistics and results
+- Responsive design
+
+## Demo
+
+You can play the game online [here](https://memory-game-seven-vert.vercel.app/).
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+Make sure you have [Node.js](https://nodejs.org) installed on your machine.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+1. Clone the repository:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+   ```bash
+   git clone https://github.com/your-username/memory-game.git
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+2. Navigate to the project directory:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   ```bash
+   cd memory-game
 
-## Learn More
+3. Install the dependencies:
 
-To learn more about Next.js, take a look at the following resources:
+    ```bash
+    npm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. Start the development server:
 
-## Deploy on Vercel
+    ```bash
+    npm run dev
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Open your browser and visit `http://localhost:3000` to play the game.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Deployment
+
+To deploy the game to a production environment, follow the deployment instructions for Next.js.
+
+### Contributing
+
+Contributions are welcome! If you find any issues or have suggestions, please feel free to open an issue or submit a pull request.
+
+### License
+
+This project is licensed under the MIT License.
+
+### Acknowledgements
+
+* The [Next.js](https://nextjs.org/) framework provided the foundation for building this application.
